@@ -1,20 +1,29 @@
 body {
- margin: 0;
- height: 100vh;
- display: flex;
- justify-content: center;
- align-items: center;
-}
-        
-.Banan {
-max-width: 80%;
-max-height: 80%;
-position: absolute;
-}
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   }
+           
+   .Banan {
+   max-width: 80%;
+   max-height: 80%;
+   position: absolute;
+   }
+   
+   .Titelkort {
+   max-width: 28.3%;
+   max-height: 28.3%;
+   position: absolute;
+   }
 
-.Spelknappen {
-max-width: 28.3%;
-max-height: 28.3%;
-position: absolute;
+#Knaprardet {
+width: 147px;
+height: 54px;
+position: relative;
+background-color: aqua;
+margin-right: 1%;
+margin-top: 2.5%;
+visibility: hidden;
 }
-  
