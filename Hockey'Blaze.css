@@ -5,7 +5,14 @@ body {
     justify-content: center;
     align-items: center;
    }
-           
+
+   canvas{
+   width: 362px;
+   height: 440px;
+   background-color: aqua;
+   position: absolute;
+   }
+        
    .Banan {
    max-width: 80%;
    max-height: 80%;
