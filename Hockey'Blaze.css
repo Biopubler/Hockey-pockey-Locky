@@ -12,7 +12,7 @@ body {
    position: absolute;
    }
    
-   .Titelkort {
+   #Titelkort {
    max-width: 28.3%;
    max-height: 28.3%;
    position: absolute;
@@ -25,5 +25,5 @@ position: relative;
 background-color: aqua;
 margin-right: 1%;
 margin-top: 2.5%;
-visibility: hidden;
-}
+/*visibility: hidden; */    /*Ta bort kommentaren på visibility hidden när du fått den att gömma bilden när */
+}                           /*knappen klickas på så att båda delarna blir osynliga. */
