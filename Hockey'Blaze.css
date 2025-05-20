@@ -34,3 +34,12 @@ border-color:rgba(0, 0, 0, 0);  /*Insåg att man kunde använda alfa värden fö
 margin-right: 1%;
 margin-top: 2.5%;
 }                           
+
+#klubba{
+position: absolute;
+margin-right: 3%;
+margin-top: 9%;
+width: 30px;
+height: 170px;
+visibility: hidden;
+}
