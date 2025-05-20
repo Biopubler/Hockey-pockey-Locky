@@ -18,12 +18,12 @@ body {
    position: absolute;
    }
 
-#Knaprardet {
+#Knaprardet { /* Nu fixade jag så att min knapp inte syns och kan fylla funktionaliteten av spelknappen*/
 width: 147px;
 height: 54px;
 position: relative;
-background-color: aqua;
+background-color: rgba(0, 0, 0, 0);
+border-color:rgba(0, 0, 0, 0);  /*Insåg att man kunde använda alfa värden för genomskinlighet :3*/
 margin-right: 1%;
 margin-top: 2.5%;
-/*visibility: hidden; */    /*Ta bort kommentaren på visibility hidden när du fått den att gömma bilden när */
-}                           /*knappen klickas på så att båda delarna blir osynliga. */
+}                           
