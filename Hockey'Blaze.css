@@ -43,3 +43,15 @@ width: 30px;
 height: 170px;
 visibility: hidden;
 }
+
+/*Lägger till en del av simons progress med spelar röresle */ 
+.player {
+  width: 50px;       
+  height: 50px;      
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url('Hockey\ klubba.png'); 
+  background-size: contain; 
+  background-repeat: no-repeat;
+}

@@ -18,11 +18,12 @@ ctx.getElementById("klubba")
 // <-- Det här kanske förstör det jag tänkt med att göra det omvända av det jag gjorde 
 /*med spelknappen därför kommenterar jag det såg jag veta vad det är jag kan behöva ta bort sen*/
 
-class Troligtmomentum {  
+//Den här delen kanske blir onödig så kommenterar bort den för tillfället
+/*class Troligtmomentum {  
   constructor(symbol) { //Hittade lite kod som på stack overflow som gjorde något annat än jag 
     this.symbol = symbol; /*tänkt men gjorde något så jag tror min kod kannibaliserar dess användbarhet med sättet
                           /*det är ihopsatt nu trots att det kommer interagera väl sen. */
-  }
+/*  }
 
   render() { 
     return this.symbol;
@@ -45,3 +46,30 @@ class Spelet {
 const TroligtmomentumObj = new Troligtmomentum("symbol_data");  
 const g = new Spelet(document.getElementById("MinCanvas"));  // 
 g.render();  
+*/
+
+let circle = document.querySelector('.player');
+let moveBy = 10; 
+
+window.addEventListener('load', () =>{
+    circle.style.position = 'absolute' ;
+    circle.style.left = 0;
+    circle.style.top = 0;
+});
+
+window.addEventListener('keydown', (e) =>{
+    switch(e.key){
+        case 'a' :
+            circle.style.left = parseInt(circle.style.left) - moveBy + 'px' ;
+            break;
+        case 'd' :
+            circle.style.left = parseInt(circle.style.left) + moveBy + 'px' ;
+            break;
+        case 'w' :
+            circle.style.top = parseInt(circle.style.top) - moveBy + 'px' ;
+            break;
+        case 's' :
+            circle.style.top = parseInt(circle.style.top) + moveBy + 'px' ;
+            break;
+    }
+});
