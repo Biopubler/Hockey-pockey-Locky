@@ -1,26 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="sv">
 <head>
-<title>Hockey'Blaze</title>
-<link rel="stylesheet" href="Hockey'Blaze.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hockey'Blaze</title>
+  <link rel="stylesheet" href="Hockey'Blaze.css" />
 </head>
 <body>
-<canvas id="MinCanvas"></canvas> <!--La in en Canvas så att vi kunde ha en spelplan-->
-    <img src="Banan.png" alt="Spelplannen" class="Banan">
-    <img src="Hockey'Blaze Titelkort.png" id="Titelkort">
-    <img src="Hockey klubba.png" id="klubba"> <!--Hade tänkt göra det omvända av det jag gjorde med spelknappen-->
-<button id="Knaprardet"></button>
+  <div class="container">
+    <img src="Hockey'Blaze Titelkort.png" id="Titelkort" alt="Titelkort" class="titelkort" />
+    <button id="Knaprardet" class="play-button">Spela</button>
 
-<!--Försöker göra det lättare att se-->
+    <img src="Banan.png" alt="Spelplan" class="Banan" id="banan" width="356" height="400"/>
+    <img src="Hockey klubba.png" id="klubba" alt="Klubba" />
+  </div>
 
-<div class="player"></div> <!--Kanske vi är påväg mot framsteg nu.-->
-<div class="Troligtmomentum"></div>
-<div class="Spelet"></div>
-<script src="Hockey'Blaze.js"></script>
+  <script src="Hockey'Blaze.js"></script>
 </body>
 </html>
-
-
-<!--La till en knapp som jag gömmde så att den kan användas för registrerandet av knapptrycket i det som hete "
-spelkanppen vilket jag byte namnet på till titelkort så allt skulle vara mindre förvirrande döpte även om filnamnet 
-på Hockey'Blaze Spel knapp.png."-->
