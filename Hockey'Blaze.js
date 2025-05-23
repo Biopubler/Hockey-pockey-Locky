@@ -3,183 +3,222 @@ const Titelkort = document.getElementById("Titelkort");
 const klubba = document.getElementById("klubba");
 const banan = document.getElementById("banan");
 const container = document.querySelector(".container");
+const puck = document.getElementById("puck");
 
-
-
-
+// Hur spelet ska funka
 let gameActive = false;
+let gameLoopId = null;
+let score = 0;
+let difficulty = 1.0;
+
+// Klubbans egenskaper
 let klubbaX = 150;
-const klubbaSpeed = 5;
+let klubbaSpeed = 8;
 const klubbaWidth = 30;
+const klubbaHeight = 160;
 
+// Puck properties
+let puckX = 170;
+let puckY = 100;
+let puckSpeedX = 3;
+let puckSpeedY = 3;
+const puckSize = 20;
+let puckActive = true;
+let respawnTimer = 0;
+const respawnDelay = 1000;
+let puckOriginX = (container.clientWidth - puckSize) / 2;
+let puckOriginY = 50;
+let lastPuckSpeedX = 3;
+let lastPuckSpeedY = 3;
 
+// Spelstart och hur det visar / påbröjar olika händelser i koden.
 Knaprardet.style.display = "block";
+
 function initGame() {
+  if (gameLoopId) {
+    cancelAnimationFrame(gameLoopId);
+  }
+  
   gameActive = true;
   klubba.style.visibility = "visible";
   puck.style.visibility = "visible";
   Titelkort.style.display = "none";
   Knaprardet.style.display = "none";
- 
-
-
-  const bananRect = banan.getBoundingClientRect();
-  klubbaX = (bananRect.width - klubbaWidth) / 2;
+  
+  // återställer
+  score = 0;
+  difficulty = 1.0;
+  klubbaSpeed = 8;
+  lastPuckSpeedX = 3;
+  lastPuckSpeedY = 3;
+  
+  // Visar pukens personliga historia fr fr
+  puckOriginX = (container.clientWidth - puckSize) / 2;
+  puckOriginY = 50;
+  
+  resetPuck();
+  
+  // Återställer klubbis pubbis*/
+  klubbaX = (container.clientWidth - klubbaWidth) / 2;
   updateKlubbaPosition();
+  
+  gameLoopId = requestAnimationFrame(gameLoop);
 }
 
-
-function updateKlubbaPosition() {
-  const bananRect = banan.getBoundingClientRect();
-  const minX = 0;
-  const maxX = bananRect.width - klubbaWidth;
- 
-
-
-  klubbaX = Math.max(minX, Math.min(klubbaX, maxX));
- 
-  klubba.style.left = `${klubbaX}px`;
-  klubba.style.position = "absolute";
-}
-
-
-document.addEventListener("keydown", (e) => {
-  if (!gameActive) return;
- 
-  if (e.key === "a" || e.key === "ArrowLeft") {
-    klubbaX -= klubbaSpeed;
-  }
-  else if (e.key === "d" || e.key === "ArrowRight") {
-    klubbaX += klubbaSpeed;
-  }
- 
-  updateKlubbaPosition();
-});
-
-
-// Uppdaterar klubbans position
-function updateKlubbaPosition() {
-  const bananRect = banan.getBoundingClientRect();
-  const minX = 0;
-  const maxX = bananRect.width - klubbaWidth;
- 
-  // Ser till att klubban inte flyr från spelbrädan typeshit
-  klubbaX = Math.max(minX, Math.min(klubbaX, maxX));
- 
-  klubba.style.left = `${klubbaX}px`;
-  klubba.style.position = "absolute";
-}
-
-
-// Lägg till dessa variabler för pucken
-const puck = document.getElementById("puck");
-let puckX = 170; // Startposition X
-let puckY = 100;  // Startposition Y
-let puckSpeedX = 2; // Hastighet X
-let puckSpeedY = 2; // Hastighet Y
-const puckSize = 20; // Måste matcha CSS-width/height
-
-
-// Initiera spelet med puck
-function initGame() {
-  gameActive = true;
-  klubba.style.visibility = "visible";
-  puck.style.visibility = "visible"; // Visa pucken
-  Titelkort.style.display = "none";
-  Knaprardet.style.display = "none";
- 
-  // Återställ puckens position
-  puckX = (container.clientWidth - puckSize) / 2;
-  puckY = 50;
+function resetPuck() {
+  puckActive = true;
+  respawnTimer = 0;
+  puckX = puckOriginX;
+  puckY = puckOriginY;
+  
+  const maxSpeed = 10;
+  puckSpeedY = Math.abs(lastPuckSpeedY) * 1.00005 * difficulty; // Det som kommer släpps ska ner som en pannkaka fixades här det fixade vi här */
+  puckSpeedX = Math.sign(puckSpeedX) * Math.min(Math.abs(puckSpeedX), maxSpeed);
+  puckSpeedY = Math.sign(puckSpeedY) * Math.min(Math.abs(puckSpeedY), maxSpeed);
   updatePuckPosition();
- 
-  // Starta spelloopen
-  requestAnimationFrame(gameLoop);
+  puck.style.visibility = "visible";
 }
 
-
-// Uppdatera puckens position och kollision
-function updatePuck() {
-  // Flytta pucken
-  puckX += puckSpeedX;
-  puckY += puckSpeedY;
- 
-  // Kolla kollision med väggar
+function updateKlubbaPosition() {
   const containerRect = container.getBoundingClientRect();
- 
-  // Vänster & höger vägg
-  if (puckX <= 0 || puckX + puckSize >= containerRect.width) {
-    puckSpeedX *= -1; // Studsa horisontellt
+  klubbaX = Math.max(0, Math.min(klubbaX, containerRect.width - klubbaWidth));
+  klubba.style.left = `${klubbaX}px`;
+}
+
+function checkPuckCollision() {
+  const containerRect = container.getBoundingClientRect();
+  const puckRect = {
+    left: puckX,
+    right: puckX + puckSize,
+    top: puckY,
+    bottom: puckY + puckSize
+  };
+  
+  if (puckRect.top <= 51) {
+    lastPuckSpeedX = puckSpeedX;
+    lastPuckSpeedY = puckSpeedY;
+    puckActive = false;
+    puck.style.visibility = "hidden";
+    respawnTimer = Date.now();
+    return false;
   }
- 
-  // Tak (överkant)
-  if (puckY <= 0) {
-    puckSpeedY *= -1; // Studsa vertikalt
+  
+  const klubbaRect = {
+    left: klubbaX,
+    right: klubbaX + klubbaWidth,
+    top: containerRect.height - klubbaHeight,
+    bottom: containerRect.height
+  };
+  
+  // Studsbolls ahhh fysik
+  if (puckRect.left <= 0) {
+    puckX = 0;
+    puckSpeedX = Math.abs(puckSpeedX) * 1.02;
+  } else if (puckRect.right >= containerRect.width) {
+    puckX = containerRect.width - puckSize;
+    puckSpeedX = -Math.abs(puckSpeedX) * 1.02;
   }
- 
-  // Golv (underkant) = Förlust?
-  if (puckY + puckSize >= containerRect.height) {
-    // Spelet över (eller reset)
-    alert("Pucken gick in i mål! Spelet är över.");
+  
+  if (puckRect.top <= 0) {
+    puckY = 0;
+    puckSpeedY = Math.abs(puckSpeedY) * 1.02;
+  } else if (puckRect.bottom >= containerRect.height) {
+    // Game Over när pucken träffar botten
+    alert("Game Over! Poäng: " + score);
     resetGame();
+    return false;
+  }
+
+  // Klubba lini kollidera nini.
+  if (puckActive && 
+      puckRect.bottom >= klubbaRect.top &&
+      puckRect.top <= klubbaRect.bottom &&
+      puckRect.right >= klubbaRect.left &&
+      puckRect.left <= klubbaRect.right
+  ) {
+    // blah blah tralala (det här fixar position är trött när det här skrevs)
+    const hitPosition = ((puckX + puckSize/2) - (klubbaX + klubbaWidth/2)) / (klubbaWidth/2);
+    
+    // Får vilken vinkel studsbollsvägarna ger puken
+    const angle = hitPosition * (Math.PI/3);
+    
+    // Som inflation ökas med 2% per år gör vi det fast snabbare.
+    const speed = Math.sqrt(puckSpeedX*puckSpeedX + puckSpeedY*puckSpeedY) * 1.02 * difficulty;
+    
+    // Listar utt vad det här gör
+    puckSpeedX = speed * Math.sin(angle);
+    puckSpeedY = -speed * 1;
+    
+    // sparar
+    lastPuckSpeedX = puckSpeedX;
+    lastPuckSpeedY = puckSpeedY;
+    
+    // Ska öka klubbhastighet med 2%
+    klubbaSpeed *= 1.02;
+    
+    // fixar difficulty Ihop bangat med simons kod så vet ej vad det gör fråga honom om saken. Fyller säkert samma funtion som annat.
+    difficulty *= 1.02;
+    score++;
+    
+    // Hindrar sticking
+    puckY = klubbaRect.top - puckSize - 1;
+    
+    return true;
+  }
+  
+  return false;
+}
+
+function updatePuck() {
+  if (!puckActive) {
+    // Puken är dum så den behöver veta vad den ska göra:
+    if (Date.now() - respawnTimer > respawnDelay) {
+      resetPuck();
+    }
     return;
   }
- 
-  // Kolla kollision med klubban
-  const klubbaRect = klubba.getBoundingClientRect();
-  if (
-    puckY + puckSize >= klubbaRect.top &&
-    puckY <= klubbaRect.bottom &&
-    puckX + puckSize >= klubbaRect.left &&
-    puckX <= klubbaRect.right
-  ) {
-    puckSpeedY *= -1; // Studsa uppåt
-    // Extra: Lägg till lite horisontell kraft baserat på klubbans rörelse
-    puckSpeedX += (klubbaX - prevKlubbaX) * 0.2;
-  }
- 
+
+  // Updatrtst positionen av pucken. 
+  puckX += puckSpeedX;
+  puckY += puckSpeedY;
+  
+  // Check collisions
+  checkPuckCollision();
+  
+  // Update rendering
   updatePuckPosition();
 }
 
-
-// Uppdatera puckens CSS-position
 function updatePuckPosition() {
   puck.style.left = `${puckX}px`;
   puck.style.top = `${puckY}px`;
 }
 
-
-// Spelloop (ersätt din gamla keydown-logik med detta)
-let prevKlubbaX = klubbaX;
 function gameLoop() {
   if (!gameActive) return;
- 
-  updateKlubbaPosition();
+  
   updatePuck();
- 
-  prevKlubbaX = klubbaX; // Spara för att beräkna klubbans rörelse
-  requestAnimationFrame(gameLoop);
+  gameLoopId = requestAnimationFrame(gameLoop);
 }
 
-
-// Återställ spelet
 function resetGame() {
   gameActive = false;
+  if (gameLoopId) {
+    cancelAnimationFrame(gameLoopId);
+    gameLoopId = null;
+  }
   Titelkort.style.display = "block";
   Knaprardet.style.display = "block";
   klubba.style.visibility = "hidden";
   puck.style.visibility = "hidden";
 }
 
-
-// Starta spelet (befintlig kod)
+// Event listeners för när saker ska ske
 Knaprardet.addEventListener("click", initGame);
 
-
-// Tangentbordslyssnare (befintlig kod)
 document.addEventListener("keydown", (e) => {
   if (!gameActive) return;
   if (e.key === "a" || e.key === "ArrowLeft") klubbaX -= klubbaSpeed;
   else if (e.key === "d" || e.key === "ArrowRight") klubbaX += klubbaSpeed;
+  updateKlubbaPosition();
 });
-Knaprardet.addEventListener("click", initGame);
