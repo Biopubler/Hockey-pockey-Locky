@@ -14,6 +14,7 @@ Knaprardet.style.display = "block";
 function initGame() {
   gameActive = true;
   klubba.style.visibility = "visible";
+  puck.style.visibility = "visible";
   Titelkort.style.display = "none";
   Knaprardet.style.display = "none";
   
@@ -48,4 +49,41 @@ document.addEventListener("keydown", (e) => {
   updateKlubbaPosition();
 });
 
+// Uppdaterar klubbans position
+function updateKlubbaPosition() {
+  const bananRect = banan.getBoundingClientRect();
+  const minX = 0;
+  const maxX = bananRect.width - klubbaWidth;
+  
+  // Ser till att klubban inte flyr från spelbrädan typeshit
+  klubbaX = Math.max(minX, Math.min(klubbaX, maxX));
+  
+  klubba.style.left = `${klubbaX}px`;
+  klubba.style.position = "absolute";
+}
+
+// Lägg till dessa variabler för pucken
+const puck = document.getElementById("puck");
+let puckX = 170; // Startposition X
+let puckY = 100;  // Startposition Y
+let puckSpeedX = 2; // Hastighet X
+let puckSpeedY = 2; // Hastighet Y
+const puckSize = 20; // Måste matcha CSS-width/height
+
+// Initiera spelet med puck
+function initGame() {
+  gameActive = true;
+  klubba.style.visibility = "visible";
+  puck.style.visibility = "visible"; // Visa pucken
+  Titelkort.style.display = "none";
+  Knaprardet.style.display = "none";
+  
+  // Återställ puckens position
+  puckX = (container.clientWidth - puckSize) / 2;
+  puckY = 50;
+  updatePuckPosition();
+  
+  // Starta spelloopen
+  requestAnimationFrame(gameLoop);
+}
 Knaprardet.addEventListener("click", initGame);
