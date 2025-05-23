@@ -28,17 +28,19 @@ body, html {
 }
 
 .play-button {
+  display: none;
   position: absolute;
   z-index: 3;
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: rgba(0, 0, 0, 0);
+  border-color:rgba(0, 0, 0, 0);
   border: none;
-  border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  top: 50%;
-  left: 50%;
+  width: 140px;
+  height: 55px;
+  top: 53.5%;
+  left:48.2%;
   transform: translate(-50%, -50%);
   transition: background-color 0.3s;
 }
